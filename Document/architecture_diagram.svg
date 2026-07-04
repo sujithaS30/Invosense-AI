@@ -1,0 +1,72 @@
+<svg viewBox="0 0 900 1340" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, Arial, sans-serif">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="5" refY="5" orient="auto">
+      <path d="M0,0 L10,5 L0,10 Z" fill="#374151"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="900" height="1340" fill="#f8fafc"/>
+  <text x="450" y="35" text-anchor="middle" font-size="22" font-weight="700" fill="#111827">InvoSense AI — System Architecture</text>
+
+  <!-- Box template: x=50 width=800 height=100 -->
+
+  <!-- 1. User -->
+  <rect x="50" y="70" width="800" height="90" rx="10" fill="#374151"/>
+  <text x="450" y="105" text-anchor="middle" font-size="17" font-weight="700" fill="#ffffff">Web Browser (User)</text>
+  <text x="450" y="128" text-anchor="middle" font-size="12.5" fill="#d1d5db">Uploads invoice PDF/image · views dashboard · asks questions</text>
+  <line x1="450" y1="160" x2="450" y2="200" stroke="#374151" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- 2. Frontend -->
+  <rect x="50" y="200" width="800" height="90" rx="10" fill="#4c3575"/>
+  <text x="450" y="235" text-anchor="middle" font-size="17" font-weight="700" fill="#ffffff">Frontend — TypeScript + HTML/CSS</text>
+  <text x="450" y="258" text-anchor="middle" font-size="12.5" fill="#ddd6f3">Upload UI · Dashboard · Ask InvoSense chat panel · served via nginx container</text>
+  <line x1="450" y1="290" x2="450" y2="330" stroke="#374151" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- 3. Backend -->
+  <rect x="50" y="330" width="800" height="90" rx="10" fill="#3730a3"/>
+  <text x="450" y="365" text-anchor="middle" font-size="17" font-weight="700" fill="#ffffff">Backend — Spring Boot 3.3 (Java 17)</text>
+  <text x="450" y="388" text-anchor="middle" font-size="12.5" fill="#dcd8f7">REST API · pipeline orchestration · runs in its own Docker container</text>
+  <line x1="450" y1="420" x2="450" y2="460" stroke="#374151" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- 4. Text Extraction -->
+  <rect x="50" y="460" width="800" height="90" rx="10" fill="#0f766e"/>
+  <text x="450" y="495" text-anchor="middle" font-size="17" font-weight="700" fill="#ffffff">Text Extraction</text>
+  <text x="450" y="518" text-anchor="middle" font-size="12.5" fill="#c9f2ec">Apache PDFBox (digital PDFs) · Tesseract OCR (scanned images)</text>
+  <line x1="450" y1="550" x2="450" y2="590" stroke="#374151" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- 5. LLM Extraction -->
+  <rect x="50" y="590" width="800" height="90" rx="10" fill="#92400e"/>
+  <text x="450" y="620" text-anchor="middle" font-size="17" font-weight="700" fill="#ffffff">Prompt 1 — LLM Structured Extraction</text>
+  <text x="450" y="640" text-anchor="middle" font-size="12.5" fill="#fde7cf">Groq (llama-3.1-8b-instant) · vendor, invoice #, date, amounts, line items</text>
+  <text x="450" y="658" text-anchor="middle" font-size="11.5" fill="#fbd9b0">JSON schema + few-shot example + response_format=json_object</text>
+  <line x1="450" y1="680" x2="450" y2="720" stroke="#374151" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- 6. Embedding -->
+  <rect x="50" y="720" width="800" height="90" rx="10" fill="#1d4ed8"/>
+  <text x="450" y="755" text-anchor="middle" font-size="17" font-weight="700" fill="#ffffff">Embedding Generation</text>
+  <text x="450" y="778" text-anchor="middle" font-size="12.5" fill="#d3e0fb">Google Gemini (gemini-embedding-001) · vectorizes vendor + date + amount</text>
+  <line x1="450" y1="810" x2="450" y2="850" stroke="#374151" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- 7. Fraud Reasoning -->
+  <rect x="50" y="850" width="800" height="110" rx="10" fill="#7a2e2e"/>
+  <text x="450" y="882" text-anchor="middle" font-size="17" font-weight="700" fill="#ffffff">Prompt 2 — Similarity Search + Fraud Reasoning</text>
+  <text x="450" y="904" text-anchor="middle" font-size="12.5" fill="#f6d4d4">Cosine similarity vs. stored invoices → Groq LLM risk score + explanation</text>
+  <text x="450" y="922" text-anchor="middle" font-size="11.5" fill="#f0b8b8">Cites specific matching invoice (vendor + date + amount) when flagged</text>
+  <line x1="450" y1="960" x2="450" y2="1000" stroke="#374151" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- 8. MongoDB -->
+  <rect x="50" y="1000" width="800" height="90" rx="10" fill="#065f46"/>
+  <text x="450" y="1035" text-anchor="middle" font-size="17" font-weight="700" fill="#ffffff">MongoDB Atlas</text>
+  <text x="450" y="1058" text-anchor="middle" font-size="12.5" fill="#c8ede1">Persists invoice records, embeddings, risk scores (invoices collection)</text>
+  <line x1="450" y1="1090" x2="450" y2="1130" stroke="#374151" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- 9. Chat/RAG -->
+  <rect x="50" y="1130" width="800" height="100" rx="10" fill="#4b5563"/>
+  <text x="450" y="1163" text-anchor="middle" font-size="17" font-weight="700" fill="#ffffff">Prompt 3 — Conversational Query (Ask InvoSense)</text>
+  <text x="450" y="1185" text-anchor="middle" font-size="12.5" fill="#e0e2e5">Groq LLM answers grounded strictly in retrieved MongoDB invoice data</text>
+  <text x="450" y="1203" text-anchor="middle" font-size="11.5" fill="#c7cad0">Reads from MongoDB Atlas · returns answer to Frontend chat panel</text>
+
+  <!-- Docker footer -->
+  <rect x="50" y="1260" width="800" height="60" rx="10" fill="none" stroke="#1f2937" stroke-width="2" stroke-dasharray="6,4"/>
+  <text x="450" y="1295" text-anchor="middle" font-size="14" font-weight="600" fill="#1f2937">Deployed via Docker Compose — backend, frontend &amp; Mongo containers orchestrated together</text>
+</svg>

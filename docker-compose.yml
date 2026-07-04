@@ -1,0 +1,43 @@
+version: '3.8'
+
+services:
+  backend:
+    build: ./backend
+    container_name: invosense-backend
+    ports:
+      - "8080:8080"
+    environment:
+      - MONGODB_URI=${MONGODB_URI:-mongodb://mongo:27017/invosense}
+      - GROQ_API_KEY=${GROQ_API_KEY}
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+    depends_on:
+      - mongo
+    networks:
+      - invosense-net
+
+  frontend:
+    build: ./frontend
+    container_name: invosense-frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+    networks:
+      - invosense-net
+
+  mongo:
+    image: mongo:7
+    container_name: invosense-mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - invosense-net
+
+networks:
+  invosense-net:
+    driver: bridge
+
+volumes:
+  mongo_data:
