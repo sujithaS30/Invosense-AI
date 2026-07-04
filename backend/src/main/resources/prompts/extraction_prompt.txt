@@ -1,0 +1,35 @@
+You are an expert invoice-data extraction engine. You will be given raw OCR text
+from an invoice, which may contain noise, misaligned columns, or OCR errors.
+
+TASK:
+Extract the following fields and return ONLY valid JSON — no markdown, no explanation,
+no preamble, no code fences.
+
+Required JSON schema:
+{
+  "vendorName": string,
+  "invoiceNumber": string,
+  "invoiceDate": "YYYY-MM-DD",
+  "totalAmount": number,
+  "taxAmount": number,
+  "lineItems": [
+    { "description": string, "quantity": number, "unitPrice": number, "amount": number }
+  ]
+}
+
+RULES:
+- If a field is not present in the text, use null (not "N/A", not an empty string).
+- Normalize all dates to YYYY-MM-DD.
+- Normalize all currency values to plain numbers (no symbols, no commas).
+- Do not invent line items that are not present in the text.
+- If the OCR text is too garbled to extract a field confidently, set it to null rather than guessing.
+
+FEW-SHOT EXAMPLE:
+Input text: "ABC Traders  Inv#: INV-2201  Date: 12/03/2026  Laptop x2 @ 45000 = 90000  GST 18% = 16200  Total: 106200"
+Output:
+{"vendorName":"ABC Traders","invoiceNumber":"INV-2201","invoiceDate":"2026-03-12","totalAmount":106200,"taxAmount":16200,"lineItems":[{"description":"Laptop","quantity":2,"unitPrice":45000,"amount":90000}]}
+
+Now extract from this OCR text:
+---
+{{OCR_TEXT}}
+---
