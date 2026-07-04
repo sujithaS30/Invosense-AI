@@ -1,7 +1,7 @@
 // Central place for all backend API calls.
 // Change API_BASE if your Spring Boot backend runs on a different host/port.
 
-export const API_BASE = "http://localhost:8080";
+export const API_BASE = "https://invosense-ai.onrender.com";
 
 export interface LineItem {
   description: string;
